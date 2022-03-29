@@ -4,85 +4,77 @@ CREATE DATABASE olist_db
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1;
 
-CREATE TABLE customer (
-	cust_id serial PRIMARY KEY,
-	cust_unique_id INT UNIQUE NOT NULL,
-	cust_zipcode INT not null,
-	cust_city CHAR not null, 
-    cust_state CHAR not null);
-   
 CREATE TABLE geolocation (
-	geolocation_zip_code SERIAL PRIMARY KEY ,
-	geolocation_lat INT not null,
-	geolocation_lng INT NOT NULL,
-	geolocation_city CHAR not null, 
-    geolocation_state CHAR not null);
- 
-CREATE TABLE orders (
-	order_id SERIAL PRIMARY KEY,
-	cust_id INT not null,
-	order_status CHAR,
-	purchase_time TIMESTAMP not null,
-	payment_time TIMESTAMP not null, 
-	time_approved TIMESTAMP not null, 
-	time_delivered_to_logistics TIMESTAMP not null, 	
-	time_delivered_to_cust TIMESTAMP not null, 	
-    est_date_delivered TIMESTAMP not null,
-   	foreign key(cust_id)references customer(cust_id));
+	zipcode INT UNIQUE NOT NULL,
+	geolocation_city CHAR NOT NULL, 
+    geolocation_state CHAR(2) NOT NULL,
+    PRIMARY KEY(zipcode));
 
- 
-CREATE TABLE payment (
-	payment_id SERIAL PRIMARY KEY ,
-	cust_id INT not null,
-	payment_sequential INT not null,
-	payment_type CHAR NOT NULL,
-	payment_installments INT not null, 
-    payment_value DECIMAL not null,
-    foreign key(cust_id)references customer(cust_id));
+CREATE TABLE customer (
+	cust_id VARCHAR(32) UNIQUE NOT NULL,
+	cust_unique_id VARCHAR(32) NOT NULL,
+	cust_zipcode INT NOT NULL,
+	cust_city CHAR NOT NULL, 
+    cust_state CHAR(2) NOT null,
+    PRIMARY KEY(cust_id),
+    FOREIGN KEY(cust_zipcode)references geolocation(zipcode));
    
-CREATE TABLE product (
-	product_id SERIAL PRIMARY KEY ,
-	product_category CHAR not null);
-  
- CREATE TABLE geolocation (
-	geolocation_zip_code SERIAL PRIMARY KEY ,
-	geolocation_lat DECIMAL UNIQUE not null,
-	geolocation_lng DECIMAL UNIQUE  NOT NULL,
-	geolocation_city CHAR not null, 
-    geolocation_state CHAR not null);
-   
- ALTER TABLE customer 
-   ADD CONSTRAINT fk_zipcode
-   FOREIGN KEY (cust_zipcode) 
-   REFERENCES geolocation(geolocation_zip_code);
-  
+CREATE TABLE orders (
+	order_id VARCHAR(32) UNIQUE NOT NULL,
+	cust_id VARCHAR(32) NOT NULL,
+	order_status CHAR,
+	purchase_time TIMESTAMP NOT NULL,
+	time_approved TIMESTAMP NOT NULL, 
+	order_delivered_carrier_date TIMESTAMP NOT NULL, 	
+	order_delivered_customer_date TIMESTAMP NOT NULL, 	
+    order_estimated_delivery_date TIMESTAMP NOT NULL,
+    PRIMARY KEY(order_id),
+   	FOREIGN KEY(cust_id)references customer(cust_id));
+
+ CREATE TABLE product (
+	product_id VARCHAR(32) UNIQUE NOT NULL,
+	product_category CHAR NOT NULL,
+	PRIMARY KEY(product_id));
+
   CREATE TABLE seller (
-	seller_id SERIAL PRIMARY KEY ,
-	seller_zipcode INT not null,
-	seller_city CHAR not null,
-	seller_state CHAR NOT NULL,
-    foreign key(seller_zipcode)references geolocation(geolocation_zip_code));
-  
-  CREATE TABLE shipment_data (
-	shipment_id SERIAL PRIMARY KEY ,
-	order_id INT unique not null,
-	product_id INT UNIQUE not null,
-	seller_id INT UNIQUE NOT NULL,
-	no_items INT not null,
-	shipping_limit_date TIMESTAMP not null,
-	price DECIMAL not null,
-	freight_value DECIMAL not null,
-	foreign key(order_id)references orders(order_id),
-	foreign key(product_id)references product(product_id),
-    foreign key(seller_id)references seller(seller_id));
-  
+	seller_id VARCHAR(32) UNIQUE NOT NULL,
+	seller_zipcode INT NOT NULL,
+	seller_city CHAR NOT NULL,
+	seller_state CHAR(2) NOT NULL,
+	PRIMARY KEY(seller_id),
+    FOREIGN KEY(seller_zipcode)references geolocation(zipcode));
  
-   CREATE TABLE reviews (
-	review_id SERIAL PRIMARY KEY ,
-	order_id INT unique not null,
+CREATE TABLE shipment_data (
+	shipment_id INT UNIQUE NOT NULL,
+	order_id VARCHAR(32) NOT NULL,
+	product_id VARCHAR(32) NOT NULL,
+	seller_id VARCHAR(32) NOT NULL,
+	num_items INT NOT NULL,
+	shipping_limit_date TIMESTAMP NOT NULL,
+	price DECIMAL NOT NULL,
+	freight_value DECIMAL NOT NULL,
+	PRIMARY KEY(shipment_id),
+	FOREIGN KEY(order_id)references orders(order_id),
+	FOREIGN KEY(product_id)references product(product_id),
+    FOREIGN KEY(seller_id)references seller(seller_id));
+  
+CREATE TABLE reviews (
+	review_id VARCHAR(32) UNIQUE NOT NULL,
+	order_id VARCHAR(32) NOT NULL,
 	review_score INT NOT NULL,
 	review_comment_title CHAR,
 	review_comment_message CHAR, 
-	review_creation_date TIMESTAMP not null,
-	review_answer_timestamp TIMESTAMP not null,
-    foreign key(order_id)references orders(order_id));
+	review_creation_date TIMESTAMP NOT NULL,
+	review_answer_timestamp TIMESTAMP NOT NULL,
+	PRIMARY KEY(review_id),
+    FOREIGN KEY(order_id)references orders(order_id));
+
+ CREATE TABLE payment (
+	payment_id INT UNIQUE NOT NULL,
+	order_id VARCHAR(32) NOT NULL,
+	payment_sequential INT NOT NULL,
+	payment_type CHAR NOT NULL,
+	payment_installments INT NOT NULL, 
+    payment_value DECIMAL NOT NULL,
+    PRIMARY KEY(payment_id),
+    FOREIGN KEY(order_id)references orders(order_id));
