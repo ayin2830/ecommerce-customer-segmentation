@@ -78,31 +78,3 @@ CREATE TABLE shipment_data (
     payment_value NUMERIC,
     PRIMARY KEY(payment_id),
     FOREIGN KEY(order_id)references orders(order_id));
-
-
-  
-   
- 
-
-
-
-
-
-   
-
-
-
-   
-   
-  
- 
-  
- 
- 
- 
-
-   
-
-
-   
-
