@@ -79,6 +79,10 @@ CREATE TABLE shipment_data (
     PRIMARY KEY(payment_id),
     FOREIGN KEY(order_id)references orders(order_id));
 
+CREATE TABLE product_translation (
+	product_category TEXT UNIQUE NOT NULL,
+	product_category_name_english TEXT UNIQUE NOT null);
+
 
   
    
