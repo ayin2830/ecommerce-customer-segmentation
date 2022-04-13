@@ -37,12 +37,12 @@ ORDER BY SUM(payment_value) DESC;
 --Frequency by customer unique id
 SELECT 
     cust_unique_id,
-    COUNT(cust_unique_id) as repeat_orders
+    COUNT(cust_unique_id) as frequency
 FROM
     customer
 GROUP BY cust_unique_id
 HAVING COUNT(cust_unique_id) > 1
-order by repeat_orders desc;
+order by frequency desc;
 
 
 --R(ecency) which customers recently purchased something?
