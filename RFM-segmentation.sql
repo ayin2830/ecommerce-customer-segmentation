@@ -198,9 +198,15 @@ INNER JOIN normalized_monetaryvaluerank
 INNER JOIN normalized_recencyrank  
 	ON normalized_recencyrank .cust_unique_id = normalized_frequencyrank .cust_unique_id);
 
-CREATE TABLE rfm_ranking AS(
-SELECT rfm_ranking_separated.cust_unique_id, (rfm_ranking_separated.recency_rank +
+--final rfm ranking!! 
+select cust_unique_id,
+       avg(rfm_rank) as rfm_rank --because there are multiple entries for some customers, we 
+       								--average them. 
+from (select rfm_ranking_separated.cust_unique_id, (rfm_ranking_separated.recency_rank +
 	rfm_ranking_separated.frequency_rank + rfm_ranking_separated.mv_rank)/3 as "rfm_rank"
-FROM rfm_ranking_separated
-ORDER BY rfm_rank DESC);
+from rfm_ranking_separated
+order BY rfm_rank desc) as dtable 
+group by cust_unique_id
+order by rfm_rank desc;
+
 	
