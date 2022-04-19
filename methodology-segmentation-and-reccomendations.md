@@ -41,9 +41,9 @@ What I did was mulitiplied the rfm scores by 10 and rounded them off to the near
 1. **Champion (RFM score of 4-6): These users splurge, makes frequent purchases and place reorders!**
      *Recommendation: Don't have to do much.These users already trust Olist for their online purchases.*
 2. **Loyal (RFM score of 3): These users either splurge but not often, or doesn't spend too much but often make purchases.**
-     *Recommendation: Don't have to do much.These users already trust Olist for their online purchases, but not as much as the champion users. Might be beneficial to throw in some extra free shipping or other coupons once in a while. *
+     *Recommendation: Don't have to do much.These users already trust Olist for their online purchases, but not as much as the champion users. Might be beneficial to throw in some extra free shipping or other coupons once in a while.*
 3. **Needs attention (RFM score of 2): These users spend an OK amount of money but does not frequently make purchases on the site**
-    *Reccomendation: Spend most of the marketing budget on this segment of customers! They are likely users of other e-commerce websites too. The goal is t make them convert to only using Olist. Therefore, the marketing team should focus on providing these users with weekly or fortnightly free shipping. Maybe even advertise Olist using Google Ads. *
+    *Reccomendation: Spend most of the marketing budget on this segment of customers! They are likely users of other e-commerce websites too. The goal is t make them convert to only using Olist. Therefore, the marketing team should focus on providing these users with weekly or fortnightly free shipping. Maybe even advertise Olist using Google Ads.*
 4. **At risk (RFM score of 1): These users barely made any significant purchases**
      *Recommendation: Don't have to do much. They are probably avid users of other platforms, and only purchase from Olist seasonally.*
 5. **Hibernating (RFM score of 0): These users have not been active.**
