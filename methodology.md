@@ -1,4 +1,5 @@
-# This is the method I used to produce the RFM customer rankings. 
+# Methodology and Segmentation
+
 
 For each metric (recency, frequency and monetary value), I:
 - wrote queries using aggregate functions to return a single value that corresponds to each customer. Note that orders with the order status "cancelled" or "unavailable" were not included.  
