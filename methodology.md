@@ -40,11 +40,11 @@ What I did was mulitiplied the rfm scores by 10 and rounded them off to the near
 
 ## 5 Segments!
 
-    1. **Champion** (RFM score of 4-6): These users splurge, makes frequent purchases and place reorders!
-    2. **Loyal** (RFM score of 3): These users either splurge but not often, or doesn't spend too much but often make purchases. 
-    3. **Needs attention** (RFM score of 2): These users spend an OK amount of money and does notm make purhcases frequently. 
-    4. **At risk** (RFM score of 1): These users barely made any significant purchases. 
-    5. **Hibernating** (RFM score of 0): These users have not been active. 
+1. **Champion** (RFM score of 4-6): These users splurge, makes frequent purchases and place reorders!
+2. **Loyal** (RFM score of 3): These users either splurge but not often, or doesn't spend too much but often make purchases. 
+3. **Needs attention** (RFM score of 2): These users spend an OK amount of money and does notm make purhcases frequently. 
+4. **At risk** (RFM score of 1): These users barely made any significant purchases. 
+5. **Hibernating** (RFM score of 0): These users have not been active. 
 
 
 
