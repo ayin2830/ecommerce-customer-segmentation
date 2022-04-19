@@ -15,10 +15,8 @@ We are using min-max normalization to produce the RFM rankings. The min-max norm
 2. We will use min-max normalization by using the formula: (The time x customer makes a purchase - earliest recorded purchase date) / (latest recorded purchase date -  earliest recorded purchase date)
 
     1. Normalizing the recency dataset is trickier then normalizing the other two datasets. This is because we are working with timestamps instead of floats or integers.  
-    2. I normalized the recency data by splitting the timestamp further into two columns: date and time. 
-    3. In order for us to have an easier time normalizing the date, I manipulated the dataset to get the amount of time (seconds) after 00:00. 
-    4. For normalizing time, I manipulated the dataset to get the amount of time (days) after the earliest purchasing date. 
-    5. I used the min-max normalization formula on both the time dataset and date dataset and averaged them to get the final normalized recency dataset. 
+    2. I normalized the recency data by converting the timestamps into **JULIANDATE** and substracting it from the earliest date recorded (also converted in Julian days).  
+    3.  Normalization of data using this formula: Days between current date and earlies recorded purchase date / (Days between latest purchase date and earliest recorded purchase date)
 
 
 ### F(requency)
