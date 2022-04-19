@@ -31,4 +31,19 @@ We are using min-max normalization to produce the RFM rankings. The min-max norm
 2. Normalization of data using this formula: Amount of money x customer spends - min(amount of money a customer spends) / x(amount of customer purchases) - x(amount of money a customer spends)
 
 
+# Customer Segmentation
+
+### More methodology...
+As mentioned above, the rfm scores of each customer is rescaled in such a way that all values are within the range [0,1]. Decimals are hard to decipher mentally. So we are going to convert customer rfm scores into integers! 
+What I did was mulitiplied the rfm scores by 10 and rounded them off to the nearest integer (one decimal place). Now we have a ranking scale ranging from [0,6]. 
+
+## 5 Segments!
+b
+    1. **Champion** (RFM score of 4-6): These users splurge, makes frequent purchases and place reorders!
+    2. **Loyal** (RFM score of 3): These users either splurge but not often, or doesn't spend too much but often make purchases. 
+    3. **Needs attention** (RFM score of 2): These users spend an OK amount of money and does notm make purhcases frequently. 
+    4. **At risk** (RFM score of 1): These users barely made any significant purchases. 
+    5. **Hibernating** (RFM score of 0): These users have not been active. 
+
+
 
