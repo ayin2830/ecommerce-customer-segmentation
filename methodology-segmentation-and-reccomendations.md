@@ -39,15 +39,15 @@ What I did was mulitiplied the rfm scores by 10 and rounded them off to the near
 ## 5 Segments!
 
 1. **Champion** (RFM score of 4-6): These users splurge, makes frequent purchases and place reorders!
-    1. *Recommendation: Don't have to do much._These users already trust Olist for their online purchases.*
+     *Recommendation: Don't have to do much.These users already trust Olist for their online purchases.*
 2. **Loyal** (RFM score of 3): These users either splurge but not often, or doesn't spend too much but often make purchases.
-    1. *Recommendation: Don't have to do much._These users already trust Olist for their online purchases, but not as much as the champion users. Might be beneficial to throw in some extra free shipping or other coupons once in a while. *
+     *Recommendation: Don't have to do much.These users already trust Olist for their online purchases, but not as much as the champion users. Might be beneficial to throw in some extra free shipping or other coupons once in a while. *
 3. **Needs attention** (RFM score of 2): These users spend an OK amount of money and does notm make purhcases frequently. 
-    1. *Recommendation: Spend most of the marketing budget on this segment! They are likely users of other e-commerce websites too. The goal is to make them convert to only using Olist. Therefore, the marketing team should focus on providing these users with weekly or fortnightly free shipping. Maybe advertise Olist more using Google Ads for these customers.*
+     *Recommendation: Spend most of the marketing budget on this segment! They are likely users of other e-commerce websites too. The goal is to make them convert to only using Olist. Therefore, the marketing team should focus on providing these users with weekly or fortnightly free shipping. Maybe advertise Olist more using Google Ads for these customers.*
 4. **At risk** (RFM score of 1): These users barely made any significant purchases. 
-    1. *Recommendation: Don't have to do much._They are probably avid users of other platforms, and only purchase from Olist seasonally.*
+     *Recommendation: Don't have to do much._They are probably avid users of other platforms, and only purchase from Olist seasonally.*
 5. **Hibernating** (RFM score of 0): These users have not been active. 
-    1. *Recommendation: These users probably have not opened the website in a long time. Send them push notifications!*
+     *Recommendation: These users probably have not opened the website in a long time. Send them push notifications!*
 
 
 
