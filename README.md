@@ -2,6 +2,8 @@
 
 This project uses sales data from Olist, a Brazilian e-commerce unicorn company. This project will focus on the use on database creation (PostgreSQL), querying data to perform RFM segmentation analysis.
 
+Data is from: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce?select=olist_order_reviews_dataset.csv
+
 ## What is RFM analysis?
 RFM analysis is a type of analysis used to determine the best customers based on their purchasing patterns. Customers are scored on these three categories:
 
