@@ -37,15 +37,15 @@ For each metric (recency, frequency and monetary value), I:
  
 
 ## Customer Segmentation
-**Loyal**: X1X
-**Big spenders**: XX1
-**Recent high potential**: 141, 142, 143, 241, 242, 243
-**Needs attention**: 21X, 22X
-**Average customer**: 33X, 34X
-**About to sleep**: 4XX
-**Lost high spenders**: 551, 552
-**Lost low spenders**: 55X
-**Other**: everything else
+- **Loyal**: X1X
+- **Big spenders**: XX1
+- **Recent high potential**: 141, 142, 143, 241, 242, 243
+- **Needs attention**: 21X, 22X
+- **Average customer**: 33X, 34X
+- **About to sleep**: 4XX
+- **Lost high spenders**: 551, 552
+- **Lost low spenders**: 55X
+- **Other**: everything else
 
 
 
