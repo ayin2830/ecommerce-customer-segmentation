@@ -1,18 +1,3 @@
-ALTER TABLE customer
-RENAME COLUMN customer_unique_id TO cust_unique_id;
-
-ALTER TABLE customer
-RENAME COLUMN customer_id TO cust_id;
-
-ALTER TABLE orders
-RENAME COLUMN customer_id TO cust_id;
-
-ALTER TABLE orders
-RENAME COLUMN order_purchase_timestamp TO purchase_time;
-
-
-
-
 CREATE TABLE monetary_value AS
 SELECT 
 	customer.cust_unique_id, payment.payment_value
@@ -28,13 +13,27 @@ and orders.order_status <> 'unavailable'
 GROUP BY customer.cust_unique_id, payment.payment_value
 ORDER BY SUM(payment_value) DESC;
 
-SELECT max(payment_value) - min(payment_value) as divident
-FROM monetary_value;
+ ALTER TABLE monetary_value
+ ADD monetary_rank  CHAR NULL;
+ 
+UPDATE monetary_value SET monetary_rank = 1
+WHERE payment_value > 1000;
 
-CREATE TABLE normalized_monetaryvaluerank AS 
-SELECT cust_unique_id ,(payment_value/13664.08) AS "mv_rank"
-FROM monetary_value
-ORDER BY "Rank by Monetary Value" DESC;
+UPDATE monetary_value SET monetary_rank = 2
+WHERE payment_value < 1000
+AND payment_value > 500;
+
+UPDATE monetary_value SET monetary_rank = 3
+WHERE payment_value < 500
+AND payment_value > 100;
+
+UPDATE monetary_value SET monetary_rank = 4
+WHERE payment_value < 200
+AND payment_value >= 100;
+
+UPDATE monetary_value SET monetary_rank = 5
+WHERE payment_value < 100;
+
 
 CREATE TABLE rank_by_frequency AS
 SELECT 
@@ -48,15 +47,26 @@ AND orders.order_status <> 'unavailable'
 GROUP BY cust_unique_id
 order by frequency desc;
 
-SELECT max(frequency) - min(frequency) AS divident
-FROM rank_by_frequency;
+ALTER TABLE frequency
+ADD frequency_rank  CHAR NULL;
 
-CREATE TABLE normalized_frequencyrank AS 
-SELECT cust_unique_id ,((frequency-1)/15.0) AS "frequency_rank"
-FROM rank_by_frequency
-ORDER BY frequency_rank desc;
+UPDATE frequency SET frequency_rank = 1
+WHERE frequency > 5;
 
-create table rank_by_recency AS 
+UPDATE frequency SET frequency_rank = 2
+WHERE frequency = 4 
+OR frequency = 5
+
+UPDATE frequency SET frequency_rank = 3
+WHERE frequency = 3;
+
+UPDATE frequency SET frequency_rank = 4
+WHERE frequency = 2;
+
+UPDATE frequency SET frequency_rank = 5
+WHERE frequency = 1;
+
+CREATE TABLE rank_by_recency AS 
 SELECT 
 	customer.cust_unique_id, orders.purchase_time
 FROM shipment_data
@@ -71,88 +81,112 @@ ORDER BY orders.purchase_time DESC;
 
 ALTER TABLE rank_by_recency RENAME purchase_time TO recency;
 
-CREATE TABLE date_normalization AS 
+CREATE TABLE recency AS 
 SELECT *, JULIANDAY(recency)-JULIANDAY('2016-09-04 21:15:19') AS "time_after"
 FROM rank_by_recency;
+UPDATE recency SET recency_rank = 1
+WHERE time_after >=640;
 
-SELECT min(time_after),max(time_after)
-FROM date_normalization;
+UPDATE recency SET recency_rank = 2
+WHERE time_after > 550 AND time_after < 640;
 
-CREATE TABLE normalized_recencyrank AS
-SELECT cust_unique_id ,((time_after)/728.4941898146644) AS "recency"
-FROM date_normalization
-ORDER BY recency desc;
+UPDATE recency SET recency_rank = 3
+WHERE time_after > 460 AND time_after <= 550;
 
-ALTER TABLE normalized_recencyrank  RENAME recency TO recency_rank;
+UPDATE recency SET recency_rank = 4
+WHERE time_after > 370 AND time_after <= 460;
 
-CREATE TABLE rfm_ranking_separated AS
-SELECT cust_unique_id, (recency_rank +
-	frequency_rank + mv_rank)/3 as "rfm_rank"
+UPDATE recency SET recency_rank = 5
+WHERE time_after <= 370;
+
+CREATE TABLE segmented AS
+SELECT cust_unique_id, recency, frequency_rank, monetary, recency || frequency_rank || monetary AS 'rfm_rank', payment_value
 FROM (
-SELECT
-normalized_recencyrank.cust_unique_id, normalized_recencyrank.recency_rank, 
-	normalized_frequencyrank.frequency_rank, normalized_monetaryvaluerank.mv_rank
-FROM normalized_frequencyrank   
-INNER JOIN normalized_monetaryvaluerank   
-	ON normalized_monetaryvaluerank .cust_unique_id = normalized_frequencyrank .cust_unique_id	
-INNER JOIN normalized_recencyrank  
-	ON normalized_recencyrank .cust_unique_id = normalized_frequencyrank .cust_unique_id)
-ORDER BY rfm_rank DESC;
+SELECT f.cust_unique_id, f.frequency_rank, r.recency_rank AS recency, m.monetary_rank AS monetary, m.payment_value 
+FROM frequency f 
+INNER JOIN recency r
+	ON f.cust_unique_id = r.cust_unique_id 
+INNER JOIN monetary_value m 
+	ON m.cust_unique_id =f.cust_unique_id))
+GROUP BY cust_unique_id;
 
-CREATE TABLE rfm_ranking AS
-SELECT cust_unique_id, ROUND(rfm_rank,1) *10 AS "rfm_ranking"
-FROM(
-SELECT cust_unique_id,
-       avg(rfm_rank) as rfm_rank
-FROM rfm_ranking_separated
-GROUP BY cust_unique_id
-ORDER BY rfm_rank DESC);
+ALTER TABLE segmented
+  ADD segment CHAR NULL;
 
-SELECT COUNT(*)
-FROM rfm_ranking;
+UPDATE segmented SET segment = 'Recent low potential spenders'
+WHERE rfm_rank LIKE '144'
+OR rfm_rank LIKE '244'
+OR rfm_rank = '143'
+OR rfm_rank = '243';
 
---champions
-CREATE TABLE champions AS
-SELECT *
-FROM rfm_ranking
-WHERE rfm_ranking >=4;
 
-ALTER TABLE champions
-ADD segment CHAR NULL;
-UPDATE champions SET segment = 'champion';
 
-CREATE TABLE loyal AS
-SELECT *
-FROM rfm_ranking
-WHERE rfm_ranking = 3;
+UPDATE segmented SET segment = 'Loyal'
+WHERE rfm_rank LIKE '_1_'
+OR rfm_rank LIKE '_2_';
 
-ALTER TABLE loyal
-ADD segment CHAR NULL;
-UPDATE loyal SET segment = 'loyal';
 
-CREATE TABLE need_attention AS
-SELECT *
-FROM rfm_ranking
-WHERE rfm_ranking = 2;
+UPDATE segmented SET segment = 'Big spenders'
+WHERE rfm_rank LIKE '__1'
 
-ALTER TABLE need_attention
-ADD segment CHAR NULL;
-UPDATE need_attention SET segment = 'needs attention';
-  
-CREATE TABLE at_risk AS
-SELECT *
-FROM rfm_ranking
-WHERE rfm_ranking = 1;
 
-ALTER TABLE at_risk
-ADD segment CHAR NULL;
-UPDATE at_risk SET segment = 'at risk';
+SELECT COUNT(*) --Users who used to spend a lot and often who has not purchased in a long time = 0. 
+FROM segmented 
+WHERE rfm_rank LIKE '422'
+OR rfm_rank LIKE '522'
+OR rfm_rank LIKE '412'
+OR rfm_rank LIKE '421'
+OR rfm_rank LIKE '512'
+OR rfm_rank LIKE '521';
 
-CREATE TABLE hibernation AS
-SELECT *
-FROM rfm_ranking
-WHERE rfm_ranking = 0;
 
-ALTER TABLE hibernation
-ADD segment CHAR NULL;
-UPDATE hibernation SET segment = 'hibernation';
+UPDATE segmented SET segment = 'General'
+WHERE rfm_rank LIKE '33_'
+OR rfm_rank LIKE '34_'
+OR rfm_rank LIKE '32_';
+
+
+UPDATE segmented SET segment = 'About to sleep'
+WHERE rfm_rank LIKE '4__'
+
+
+UPDATE segmented SET segment = 'Lost'
+WHERE rfm_rank LIKE '5__'
+
+UPDATE segmented SET segment = 'Recent high potential '
+WHERE rfm_rank LIKE '1_1'
+OR rfm_rank LIKE '2_2'
+OR rfm_rank LIKE '2_1'
+OR rfm_rank LIKE '1_2';
+
+
+UPDATE segmented SET segment = 'Lost high spenders'
+WHERE rfm_rank LIKE '5_1'
+OR rfm_rank LIKE '5_2';
+
+SELECT COUNT(*) --Needs attention
+FROM segmented 
+WHERE rfm_rank LIKE '1_3'
+OR rfm_rank LIKE '1_2'
+OR rfm_rank LIKE '1_1'
+OR rfm_rank LIKE '2_3'
+OR rfm_rank LIKE '2_2'
+OR rfm_rank LIKE '2_3';
+
+
+UPDATE final_segmentation SET segment = 'Needs attention'
+WHERE rfm_ranking LIKE '1_3'
+OR rfm_ranking LIKE '1_2'
+OR rfm_ranking LIKE '1_1'
+OR rfm_ranking LIKE '2_3'
+OR rfm_ranking LIKE '2_2'
+OR rfm_ranking LIKE '2_3';
+
+
+CREATE TABLE final_segmentation AS
+SELECT *, min(rfm_ranking) AS rfm_rank ----we have some duplicate customers with different rfm ranks, so we will get the min(most recent) entry. 
+FROM final_rank 
+GROUP BY cust_unique_id;
+
+ALTER TABLE final_segmentation DROP COLUMN rfm_ranking;
+
