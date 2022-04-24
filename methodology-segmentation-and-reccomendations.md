@@ -12,12 +12,16 @@ We are using min-max normalization to produce the RFM rankings. The min-max norm
 
 ## R(ecency)
 1. We write queries to show which customers made the most recent to least recent purchases.
-2. We will use min-max normalization by using the formula: (The time x customer makes a purchase - earliest recorded purchase date) / (latest recorded purchase date -  earliest recorded purchase date)
+2. Segment them from 1 to 5. 
 
     1. Normalizing the recency dataset is trickier then normalizing the other two datasets. This is because we are working with timestamps instead of floats or integers.  
     2. I normalized the recency data by converting the timestamps into **JULIANDATE** and substracting it from the earliest date recorded (also converted in Julian days).  
-    3.  Normalization of data using this formula: Days between current date and earlies recorded purchase date / (Days between latest purchase date and earliest recorded purchase date)
-
+    3.  Segmentation: 
+           1. Group 1:customer with <5x purchases
+           2. Group 2: customer with 4-5x purchases
+           3. Group 3: customer with 3x purchases
+           4. Group 4: customer with 2x purchases
+           5. Group 5: customer with 1x purchase
 
 ### F(requency)
 1. First, we write a query to total the amount of times each customer makes a purchase. 
