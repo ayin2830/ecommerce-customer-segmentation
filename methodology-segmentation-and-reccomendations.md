@@ -20,7 +20,7 @@ For each metric (recency, frequency and monetary value), I:
 ### F(requency)
 1. First, we write a query to total the amount of times each customer makes a purchase. 
 2. Segmentation: 
-           1. Group 1:customer with <5x purchases.
+      1. Group 1:customer with <5x purchases.
            2. Group 2: customer with 4-5x purchases.
            3. Group 3: customer with 3x purchases.
            4. Group 4: customer with 2x purchases.
@@ -30,7 +30,7 @@ For each metric (recency, frequency and monetary value), I:
 
 ### M(onetary) Value
 1. First, we write a query to total the amount of money each customer spent. Orders with the order status "cancelled" or "unavailable" were not included. 
-2. Segmentation: 
+2. Segmentation: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
            1. Group 1: customer with expenditure above R$1000.
            2. Group 2: customer with expenditure at R$1000 - R$500.
            3. Group 3: customer with expenditure at R$500 - R$100.
